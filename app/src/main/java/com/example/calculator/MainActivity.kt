@@ -10,23 +10,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultTV: TextView
     private var currentInput: String = ""
     private var operator: String? = null
-    private var operand1: Double? = null
-    private var operand2: Double? = null
+    private var operand1: Int? = null
+    private var operand2: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Reference the TextView for displaying the result
         resultTV = findViewById(R.id.resultTV)
 
-        // Set up number buttons
         setNumberButtonClickListeners()
-
-        // Set up operator buttons (+, -, /, *)
         setOperatorButtonClickListeners()
-
-        // Set up special function buttons (CE, C, =, +/-)
         setSpecialFunctionButtonClickListeners()
     }
 
@@ -56,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             val button: Button = findViewById(id)
             button.setOnClickListener {
                 if (currentInput.isNotEmpty()) {
-                    operand1 = currentInput.toDoubleOrNull()
+                    operand1 = currentInput.toIntOrNull()
                     operator = op
                     currentInput = ""
                     updateResultDisplay()
@@ -82,9 +76,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.buttonDot).setOnClickListener {
-            if (!currentInput.contains(".")) {
-                appendToInput(".")
-            }
         }
 
         findViewById<Button>(R.id.buttonBS).setOnClickListener {
@@ -96,11 +87,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clearInput() {
-        currentInput =""
+        currentInput = ""
         updateResultDisplay()
     }
 
     private fun appendToInput(value: String) {
+        if(currentInput == "0"){
+            currentInput = ""
+        }
         currentInput += value
         updateResultDisplay()
     }
@@ -129,24 +123,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateResult() {
-        operand2 = currentInput.toDoubleOrNull()
+        operand2 = currentInput.toIntOrNull()
 
         if (operand1 != null && operand2 != null && operator != null) {
             val result = when (operator) {
                 "+" -> operand1!! + operand2!!
                 "-" -> operand1!! - operand2!!
                 "*" -> operand1!! * operand2!!
-                "/" -> if (operand2 != 0.0) operand1!! / operand2!! else "Error"
+                "/" -> if (operand2 != 0) operand1!! / operand2!! else "Error"
                 else -> "Error"
             }
             resultTV.text = result.toString()
-            operand1 = result.toString().toDoubleOrNull()
+            operand1 = result.toString().toIntOrNull()
             operand2 = null
             currentInput = operand1.toString()
             operator = null
-        }
-        else if(operand1 != null) {
-            resultTV.text = operand1.toString()
         }
     }
 }
