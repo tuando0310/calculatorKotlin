@@ -140,12 +140,12 @@ class MainActivity : AppCompatActivity() {
                 else -> "Error"
             }
             resultTV.text = result.toString()
-            operand1 = null
+            operand1 = result.toString().toDoubleOrNull()
             operand2 = null
-            currentInput = ""
+            currentInput = operand1.toString()
             operator = null
         }
-        else if(operand1 != null  && operator != null) {
+        else if(operand1 != null) {
             resultTV.text = operand1.toString()
         }
     }
